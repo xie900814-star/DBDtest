@@ -43,7 +43,7 @@
     label {
         font-size: 20px;
         margin-top: 15px;
-        white-space: nowrap; /* ←⛔ 只加這個，不動其他 */
+        white-space: nowrap;
     }
 
     .container {
@@ -53,7 +53,7 @@
         width: 360px;
         backdrop-filter: blur(6px);
 
-        border: 2px solid rgba(255,0,0,0.4); /* 🔥 紅色外框 */
+        border: 2px solid rgba(255,0,0,0.4);
         box-shadow: 0 0 25px rgba(255,0,0,0.5);
         text-align: center;
     }
@@ -72,7 +72,6 @@
         text-shadow: 2px 2px 3px black;
     }
 
-    /* 🔥 DBD 血紅按鈕 */
     button {
         width: 85%;
         padding: 10px;
@@ -99,7 +98,6 @@
         transform: scale(1.03);
     }
 
-    /* List box 區塊 */
     .list-box {
         background: rgba(0,0,0,0.55);
         margin-top: 10px;
@@ -118,9 +116,34 @@
         font-size: 18px;
         text-shadow: 2px 2px 4px black;
     }
+
+    /* 🔥 滑鼠血光效果 */
+    .blood {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+        background: radial-gradient(
+            rgba(255,0,0,0.9),
+            rgba(120,0,0,0.6),
+            rgba(80,0,0,0)
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        animation: fadeout 1s forwards;
+    }
+
+    @keyframes fadeout {
+        0% { opacity: 1; transform: scale(1) translate(-50%, -50%); }
+        100% { opacity: 0; transform: scale(2.2) translate(-50%, -50%); }
+    }
+
 </style>
 </head>
 <body>
+
+<!-- 🔊 自動播放 + 循環：僅新增這一行 -->
+<audio src="DBD主題曲.mp3" autoplay loop></audio>
 
 <div class="container">
 
@@ -131,19 +154,15 @@
     <input type="text" id="sancaiInput" maxlength="3" placeholder="例如：金火木">
     <button onclick="updateOptions()">向惡靈發出挑戰</button>
 
-    <!-- 🔻 可用殺手 -->
     <br><label>【殺手】：</label><br>
     <select id="killerSelect"></select>
 
-    <!-- 🔻 可用配件 -->
     <label>【可用配件範圍】：</label>
     <div class="list-box"><ul id="addonList"></ul></div>
 
-    <!-- 🔻 【必燒祭品】 -->
     <label>【祭品種類(選1)】：</label>
     <div class="list-box"><ul id="offeringList"></ul></div>
 
-    <!-- 🔻 技能 -->
     <label>【可用技能範圍】：</label>
     <div class="list-box"><ul id="perkList"></ul></div>
 
@@ -151,39 +170,13 @@
 
 <script>
 const sancaiData = {
-    "金": {
-        killer: ["夾子", "醫生", "小豬", "槍手", "歐爸", "釘子頭", "阿追", "奇點"],
-        addon: ["紫色等級"],
-        offering: ["金幣"],
-        perk: ["跟發電機或普通攻擊有關"]
-    },
-    "火": {
-        killer: ["麥麥", "皮臉", "老佛", "怨靈", "歐逆", "騎士", "巫妖", "德古拉", "金木"],
-        addon: ["紅色等級"],
-        offering: ["斬殺"],
-        perk: ["跟圖騰有關"]
-    },
-    "水": {
-        killer: ["小丑", "瘟疫", "枯魔", "鳥姐", "貞子", "異形", "偽德", "黑大媽", "卡蘇"],
-        addon: ["藍色等級"],
-        offering: ["黑霧"],
-        perk: ["跟冷卻有關"]
-    },
-    "木": {
-        killer: ["噹噹", "護士", "兔媽", "鬼臉", "影魔", "骨姐", "恰吉", "彈簧"],
-        addon: ["綠色等級"],
-        offering: ["枯木"],
-        perk: ["跟木板有關"]
-    },
-    "土": {
-        killer: ["比利", "妖婆", "軍團", "魔王", "三角頭", "雙胞胎", "威哥"],
-        addon: ["灰色等級"],
-        offering: ["地圖或藍圖"],
-        perk: ["跟移動速度有關"]
-    }
+    "金": { killer: ["夾子", "醫生", "小豬", "槍手", "歐爸", "釘子頭", "阿追", "奇點"], addon: ["紫色等級"], offering: ["金幣"], perk: ["跟發電機或普通攻擊有關"] },
+    "火": { killer: ["麥麥", "皮臉", "老佛", "怨靈", "歐逆", "騎士", "巫妖", "德古拉", "金木"], addon: ["紅色等級"], offering: ["斬殺"], perk: ["跟圖騰有關"] },
+    "水": { killer: ["小丑", "瘟疫", "枯魔", "鳥姐", "貞子", "異形", "偽德", "黑大媽", "卡蘇"], addon: ["藍色等級"], offering: ["黑霧"], perk: ["跟冷卻有關"] },
+    "木": { killer: ["噹噹", "護士", "兔媽", "鬼臉", "影魔", "骨姐", "恰吉", "彈簧"], addon: ["綠色等級"], offering: ["枯木"], perk: ["跟木板有關"] },
+    "土": { killer: ["比利", "妖婆", "軍團", "魔王", "三角頭", "雙胞胎", "威哥"], addon: ["灰色等級"], offering: ["地圖或藍圖"], perk: ["跟移動速度有關"] }
 };
 
-// ----------------------------------------
 function updateOptions() {
     const input = document.getElementById("sancaiInput").value.trim();
 
@@ -201,10 +194,7 @@ function updateOptions() {
         }
     }
 
-    let killers = [];
-    let addons = [];
-    let offerings = [];
-    let perks = [];
+    let killers = [], addons = [], offerings = [], perks = [];
 
     chars.forEach(c => {
         const d = sancaiData[c];
@@ -225,7 +215,6 @@ function updateOptions() {
     fillList("perkList", perks);
 }
 
-// ----------------------------------------
 function fillSelect(id, items) {
     const sel = document.getElementById(id);
     sel.innerHTML = "";
@@ -236,7 +225,6 @@ function fillSelect(id, items) {
     });
 }
 
-// ----------------------------------------
 function fillList(id, items) {
     const ul = document.getElementById(id);
     ul.innerHTML = "";
@@ -246,6 +234,21 @@ function fillList(id, items) {
         ul.appendChild(li);
     });
 }
+
+// 🩸 滑鼠移動血光效果
+document.addEventListener("mousemove", function(e) {
+    const blood = document.createElement("div");
+    blood.classList.add("blood");
+
+    blood.style.left = e.pageX + "px";
+    blood.style.top = e.pageY + "px";
+
+    document.body.appendChild(blood);
+
+    setTimeout(() => {
+        blood.remove();
+    }, 1000);
+});
 </script>
 
 </body>
