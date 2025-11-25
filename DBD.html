@@ -154,7 +154,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const fade = setInterval(() => {
             v += 0.02;
             bgm.volume = v;
-            if (v >= 0.30) { // ⭐ 最終音量（可調）
+            if (v >= 0.15) { // ⭐ 最終音量（可調）
                 clearInterval(fade);
             }
         }, 80);
@@ -237,3 +237,4 @@ function fillList(id, items) {
 
 </body>
 </html>
+
